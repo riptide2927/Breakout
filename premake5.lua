@@ -47,9 +47,14 @@ project "Breakout"
 	links
 	{
 		"soil2-debug",
-		"glfw3",
+		"glfw3_mt",
 		"glew32s",
 		"opengl32.lib"
+	}
+
+	defines
+	{
+		"GLEW_STATIC"
 	}
 
 	filter "system:windows"
