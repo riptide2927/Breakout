@@ -13,11 +13,11 @@ VertexArray::~VertexArray()
 void VertexArray::Bind() const
 {
 	glBindVertexArray(m_VertexArray);
-	glBindVertexArray(m_VertexArray);
 }
 
 void VertexArray::Unbind() const
 {
+	glBindVertexArray(0);
 }
 
 void VertexArray::AddLayout(const VertexBuffer& buffer, const VertexBufferLayout& layout)
@@ -31,7 +31,15 @@ void VertexArray::AddLayout(const VertexBuffer& buffer, const VertexBufferLayout
 	{
 		const auto& element = elements[i];
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), (const void*)(offset += element.count * VertexLayoutElement::GetSizeOfType(element.type)));
+		if (elements.size() == 1)
+		{
+			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), 0);
+			break;
+		}
+		else
+		{
+			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), (const void*)(offset += element.count * VertexLayoutElement::GetSizeOfType(element.type)));
+		}
 	}
 
 }

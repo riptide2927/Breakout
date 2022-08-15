@@ -24,6 +24,16 @@ int Shader::GetUniformLocation(const std::string& name)
     return Location;
 }
 
+void Shader::Bind() const
+{
+    glUseProgram(m_Program);
+}
+
+void Shader::Unbind() const
+{
+    glUseProgram(0);
+}
+
 void Shader::CreateProgram(const std::string& verfilepath, const std::string& fragfilepath)
 {
     m_Program = glCreateProgram();
@@ -52,11 +62,12 @@ void Shader::CreateProgram(const std::string& verfilepath, const std::string& fr
 
 uint32_t Shader::CreateShader(const std::string& shadersrc_path, GLenum type)
 {
-    const char* shader_src = ParseFile(shadersrc_path);
+    std::string shader_src = ParseFile(shadersrc_path);
     uint32_t shader = glCreateShader(type);
+    const char* src = shader_src.c_str();
 
     int sucess;
-    glShaderSource(shader, 1, &shader_src, nullptr);
+    glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
 
     glGetShaderiv(shader, GL_COMPILE_STATUS, &sucess);
@@ -77,7 +88,7 @@ uint32_t Shader::CreateShader(const std::string& shadersrc_path, GLenum type)
     
 }
 
-const char* Shader::ParseFile(const std::string& filepath)
+std::string Shader::ParseFile(const std::string& filepath)
 {
     std::ifstream file;
     file.open(filepath);

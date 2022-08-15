@@ -42,5 +42,6 @@ void Window::CreateWindow()
 
     glewExperimental = GL_TRUE;
     glewInit();
+    glViewport(0, 0, m_Width, m_Height);
 
 }
