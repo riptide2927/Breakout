@@ -33,7 +33,6 @@ project "Breakout"
 		"src",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.GLEW}",
-		"%{IncludeDir.SOIL2}",
 		"%{IncludeDir.GLM}"
 	}
 
@@ -41,12 +40,10 @@ project "Breakout"
 	{
 		"%{LibraryDir.GLFW}",
 		"%{LibraryDir.GLEW}",
-		"%{LibraryDir.SOIL2}"
 	}
 
 	links
 	{
-		"soil2-debug",
 		"glfw3_mt",
 		"glew32s",
 		"opengl32.lib"
