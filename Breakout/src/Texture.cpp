@@ -10,13 +10,14 @@ Texture::Texture(const std::string& imgfilepath)
 
 Texture::~Texture()
 {
-
+	glDeleteTextures(1, &m_Texture);
 }
 
 
 void Texture::PopulateMImage(const std::string& filepath)
 {
-	m_Image = SOIL_load_image(filepath.c_str(), &m_Width, &m_Height, &m_Channels, 0);
+	stbi_set_flip_vertically_on_load(1);
+	m_Image = stbi_load(filepath.c_str(), &m_Width, &m_Height, &m_Channels, STBI_default);
 }
 
 void Texture::CreateTexture()
@@ -36,7 +37,7 @@ void Texture::CreateTexture()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	SOIL_free_image_data(m_Image);
+	stbi_image_free(m_Image);
 
 }
 
