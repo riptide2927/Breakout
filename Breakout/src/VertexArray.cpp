@@ -1,4 +1,5 @@
 #include "VertexArray.h"
+#include <iostream>
 
 VertexArray::VertexArray()
 {
@@ -31,14 +32,14 @@ void VertexArray::AddLayout(const VertexBuffer& buffer, const VertexBufferLayout
 	{
 		const auto& element = elements[i];
 		glEnableVertexAttribArray(i);
-		if (elements.size() == 1)
+		if (elements.size() > 1)
 		{
 			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), 0);
-			break;
 		}
 		else
 		{
-			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), (const void*)(offset += element.count * VertexLayoutElement::GetSizeOfType(element.type)));
+			offset += element.count * VertexLayoutElement::GetSizeOfType(element.type);
+			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStrid(), (const void*)offset);
 		}
 	}
 
