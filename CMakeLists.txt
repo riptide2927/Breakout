@@ -22,3 +22,11 @@ else()
 endif()
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+add_subdirectory(vendor/glfw)
+
+target_include_directories(${PROJECT_NAME} PUBLIC src vendor/glew/include vendor/glfw/include vendor/glm/glm vendor/stb/include)
+
+target_link_directories(${PROJECT_NAME} PRIVATE build/vendor/glfw/src vendor/glew/lib)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 GL GLEW)
