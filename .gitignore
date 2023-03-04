@@ -1,4 +1,6 @@
 build/
+vendor/
+.vscode/
 *.exe
 *.a
 *.obj
