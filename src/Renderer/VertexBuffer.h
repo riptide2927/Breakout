@@ -3,14 +3,15 @@
 #include <stdexcept>
 #include <glm.hpp>
 #include <vector>
+#include <assert.h>
 
 struct LayoutElement
 {
     GLenum type;
-    uint32_t count;
+    int count;
     bool normalized;
 
-    int GetSizeofType(GLenum type)
+    static uint32_t GetSizeofType(GLenum type)
     {
         switch(type)
         {
@@ -18,43 +19,62 @@ struct LayoutElement
         case GL_INT:    return sizeof(int);
         case GL_UNSIGNED_INT:   return sizeof(unsigned int);
         case GL_UNSIGNED_BYTE:  return sizeof(unsigned char);
-        default:    static_assert(false);     
+        default:    assert(false);     
         }
     }
 };
 
-struct Vertex
+class VertexBufferLayout
 {
 public:
-    virtual std::vector<LayoutElement>& GetLayout() const = 0;
-protected:
-    std::vector<LayoutElement> m_Layout;
-};
 
-struct BaseVertexType : public Vertex
-{
-public:
-    BaseVertexType()
+    VertexBufferLayout()
+        : m_Stride(0) {}
+
+    template<typename T>
+    void Push(int count)
     {
-        m_Layout.push_back( {GL_FLOAT, 3, false} );
-        m_Layout.push_back( {GL_FLOAT, 3, false} );
-        m_Layout.push_back( {GL_FLOAT, 2, false} );        
+        assert(false);
     }
-public:
-    glm::vec3 position;
-    glm::vec3 color;
-    glm::vec2 tex_coords;
+
+    template<>
+    void Push<float>(int count)
+    {
+        m_Layout.push_back({GL_FLOAT, count, false});
+        m_Stride += LayoutElement::GetSizeofType(GL_FLOAT) * count;
+    }
+
+    template<>
+    void Push<uint32_t>(int count)
+    {
+        m_Layout.push_back({GL_UNSIGNED_INT, count, false});
+        m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_INT) * count;
+    }
+
+    template<>
+    void Push<unsigned char>(int count)
+    {
+        m_Layout.push_back({GL_UNSIGNED_BYTE, count, true});
+        m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_BYTE) * count;
+    }
+
+    inline const std::vector<LayoutElement>& GetElements() const { return m_Layout; }
+    inline uint32_t GetStride() const { return m_Stride; }
+
+private:
+    std::vector<LayoutElement> m_Layout;
+    uint32_t m_Stride;
 };
 
 class VertexBuffer
 {
 public:
-    VertexBuffer(const Vertex* data, int size, GLenum usage);
+    VertexBuffer(const void* data, int size, GLenum usage);
     VertexBuffer(GLenum usage);
     ~VertexBuffer();
     void Bind() const;
     void Unbind() const;
-    void Setdata(const Vertex* data, int size);
+    void Setdata(const void* data, int size);
 private:
     int m_Size = 0;
     uint32_t m_Buffer;

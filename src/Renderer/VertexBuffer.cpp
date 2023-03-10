@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
-VertexBuffer::VertexBuffer(const Vertex* data, int size, GLenum usage)
+VertexBuffer::VertexBuffer(const void* data, int size, GLenum usage)
     : m_Size(size), usage(usage)
 {
     glGenBuffers(1, &m_Buffer);
@@ -33,7 +33,7 @@ void VertexBuffer::Unbind() const
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VertexBuffer::Setdata(const Vertex* data, int size)
+void VertexBuffer::Setdata(const void* data, int size)
 {
     if(m_Size != 0)
         throw std::runtime_error("If data was provided during object construction you should not call Setdata");
