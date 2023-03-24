@@ -4,3 +4,10 @@ build/
 *.a
 *.obj
 *.spv
+*.sln
+*.vcxproj
+.vs/
+*.vcxproj.filters
+*.vcxproj.user
+CMakeFiles/
+cmake_install.cmake
