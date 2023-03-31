@@ -29,4 +29,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC src vendor/glew/include vendor
 
 target_link_directories(${PROJECT_NAME} PRIVATE build/vendor/glfw/src vendor/glew/lib)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 opengl32 glew32s)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 GL GLEW)

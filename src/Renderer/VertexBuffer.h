@@ -11,7 +11,7 @@ struct LayoutElement
     int count;
     bool normalized;
 
-    static uint32_t GetSizeofType(GLenum type)
+    constexpr static uint32_t GetSizeofType(GLenum type)
     {
         switch(type)
         {
@@ -34,30 +34,27 @@ public:
     template<typename T>
     void Push(int count)
     {
-        assert(false);
+        constexpr if(sizeof(T) == sizeof(float))
+        {
+            m_Layout.push_back({GL_FLOAT, count, false});
+            m_Stride += LayoutElement::GetSizeofType(GL_FLOAT) * count;
+        }
+        constexpr else if(sizeof(T) == sizeof(uint32_t))
+        {
+            m_Layout.push_back({GL_UNSIGNED_INT, count, false});
+            m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_INT) * count;
+        }
+        constexpr else if(sizeof(T) == sizeof(unsigned char))
+        {
+            m_Layout.push_back({GL_UNSIGNED_BYTE, count, true});
+            m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_BYTE) * count;
+        }
+        constexpr else
+        {
+            assert(false);
+        }
     }
-
-    template<>
-    void Push<float>(int count)
-    {
-        m_Layout.push_back({GL_FLOAT, count, false});
-        m_Stride += LayoutElement::GetSizeofType(GL_FLOAT) * count;
-    }
-
-    template<>
-    void Push<uint32_t>(int count)
-    {
-        m_Layout.push_back({GL_UNSIGNED_INT, count, false});
-        m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_INT) * count;
-    }
-
-    template<>
-    void Push<unsigned char>(int count)
-    {
-        m_Layout.push_back({GL_UNSIGNED_BYTE, count, true});
-        m_Stride += LayoutElement::GetSizeofType(GL_UNSIGNED_BYTE) * count;
-    }
-
+    
     inline const std::vector<LayoutElement>& GetElements() const { return m_Layout; }
     inline uint32_t GetStride() const { return m_Stride; }
 
